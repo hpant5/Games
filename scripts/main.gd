@@ -57,7 +57,7 @@ func load_level(index: int) -> void:
 	_build_board()
 	_spawn_cars()
 	_update_hud()
-	message.text = "Tap a car, use arrows"
+	message.text = "Drag cars along their lane"
 
 func try_move(car: Node, direction: int) -> void:
 	var delta := Vector2i(direction, 0) if car.orientation == "h" else Vector2i(0, direction)
@@ -118,9 +118,9 @@ func _spawn_cars() -> void:
 	for car_data in level_data["cars"]:
 		var car := CarPieceScene.instantiate()
 		cars_layer.add_child(car)
-		car.setup(car_data, cell_size)
-		car.position += board_origin
+		car.setup(car_data, cell_size, board_origin)
 		car.selected.connect(_select_car)
+		car.drag_requested.connect(try_move)
 		cars.append(car)
 
 func _select_car(car: Node) -> void:

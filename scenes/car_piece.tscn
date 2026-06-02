@@ -11,7 +11,17 @@ script = ExtResource("1_car")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_car")
 
-[node name="Body" type="ColorRect" parent="."]
+[node name="Body" type="Polygon2D" parent="."]
+
+[node name="Windshield" type="Polygon2D" parent="."]
+
+[node name="Wheel1" type="ColorRect" parent="."]
+
+[node name="Wheel2" type="ColorRect" parent="."]
+
+[node name="Wheel3" type="ColorRect" parent="."]
+
+[node name="Wheel4" type="ColorRect" parent="."]
 
 [node name="Label" type="Label" parent="."]
 theme_override_colors/font_color = Color(1, 1, 1, 1)
