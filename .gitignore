@@ -1,0 +1,10 @@
+# Godot local/editor cache
+.godot/
+
+# Godot exports and transient files
+*.tmp
+*.translation
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

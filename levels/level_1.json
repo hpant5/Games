@@ -1,0 +1,13 @@
+{
+  "name": "First Exit",
+  "width": 6,
+  "height": 6,
+  "exit": { "side": "right", "row": 2 },
+  "cars": [
+    { "id": "A", "x": 1, "y": 2, "length": 2, "orientation": "h", "target": true },
+    { "id": "B", "x": 3, "y": 0, "length": 3, "orientation": "v" },
+    { "id": "C", "x": 4, "y": 3, "length": 2, "orientation": "v" },
+    { "id": "D", "x": 0, "y": 4, "length": 3, "orientation": "h" },
+    { "id": "E", "x": 5, "y": 0, "length": 2, "orientation": "v" }
+  ]
+}
