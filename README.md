@@ -9,6 +9,8 @@ Open this folder in Godot and run `scenes/main.tscn`.
 ## Controls
 
 - Tap/click a car to select it.
+- Press `Tab` or `Space` to cycle cars.
+- Press `1`-`9` to select a car by order.
 - Use arrow keys to move the selected car along its lane.
 - Move the red target car out through the green exit.
 - Press `R` to restart.

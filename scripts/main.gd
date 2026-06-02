@@ -26,12 +26,23 @@ func _input(event: InputEvent) -> void:
 		load_level(level_index)
 	if completed:
 		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_select_car_at(event.position)
+	elif event is InputEventScreenTouch and event.pressed:
+		_select_car_at(event.position)
 	if selected_car == null:
 		return
 	if event is InputEventKey and event.pressed:
-		var direction := _direction_from_key(event.keycode)
-		if direction != 0:
-			try_move(selected_car, direction)
+		if event.keycode == KEY_TAB or event.keycode == KEY_SPACE:
+			_select_next_car()
+		else:
+			var number_index := _number_key_index(event.keycode)
+			if number_index >= 0 and number_index < cars.size():
+				_select_car(cars[number_index])
+			else:
+				var direction := _direction_from_key(event.keycode)
+				if direction != 0:
+					try_move(selected_car, direction)
 
 func load_level(index: int) -> void:
 	completed = false
@@ -53,7 +64,7 @@ func load_level(index: int) -> void:
 	_spawn_cars()
 	_select_target_car()
 	_update_hud()
-	message.text = "Red car selected. Use arrows or drag."
+	message.text = "Click car, Tab cycles, arrows move."
 
 func try_move(car: Node, direction: int) -> void:
 	var delta := Vector2i(direction, 0) if car.orientation == "h" else Vector2i(0, direction)
@@ -142,6 +153,27 @@ func _update_hud() -> void:
 	title.text = "Parking Jam"
 	hud.text = "Level %d/%d   Moves %d   R restart" % [level_index, max_levels, moves]
 
+func _select_car_at(screen_position: Vector2) -> void:
+	for i in range(cars.size() - 1, -1, -1):
+		var car := cars[i]
+		if _car_contains_point(car, screen_position):
+			_select_car(car)
+			return
+
+func _car_contains_point(car: Node, screen_position: Vector2) -> bool:
+	var car_size := Vector2(cell_size * car.length - 10.0, cell_size - 10.0)
+	if car.orientation == "v":
+		car_size = Vector2(cell_size - 10.0, cell_size * car.length - 10.0)
+	var rect := Rect2(car.position - car_size * 0.5, car_size)
+	return rect.has_point(screen_position)
+
+func _select_next_car() -> void:
+	if cars.is_empty():
+		return
+	var current_index := cars.find(selected_car)
+	var next_index := (current_index + 1) % cars.size()
+	_select_car(cars[next_index])
+
 func _direction_from_key(keycode: Key) -> int:
 	if selected_car.orientation == "h":
 		if keycode == KEY_LEFT:
@@ -154,3 +186,8 @@ func _direction_from_key(keycode: Key) -> int:
 		if keycode == KEY_DOWN:
 			return 1
 	return 0
+
+func _number_key_index(keycode: Key) -> int:
+	if keycode >= KEY_1 and keycode <= KEY_9:
+		return int(keycode - KEY_1)
+	return -1
