@@ -21,7 +21,7 @@ var completed := false
 func _ready() -> void:
 	load_level(level_index)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("restart_level"):
 		load_level(level_index)
 	if completed:
@@ -29,14 +29,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if selected_car == null:
 		return
 	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_LEFT:
-			try_move(selected_car, -1)
-		elif event.keycode == KEY_RIGHT:
-			try_move(selected_car, 1)
-		elif event.keycode == KEY_UP:
-			try_move(selected_car, -1)
-		elif event.keycode == KEY_DOWN:
-			try_move(selected_car, 1)
+		var direction := _direction_from_key(event.keycode)
+		if direction != 0:
+			try_move(selected_car, direction)
 
 func load_level(index: int) -> void:
 	completed = false
@@ -56,15 +51,18 @@ func load_level(index: int) -> void:
 	level_data = parsed
 	_build_board()
 	_spawn_cars()
+	_select_target_car()
 	_update_hud()
-	message.text = "Drag cars along their lane"
+	message.text = "Red car selected. Use arrows or drag."
 
 func try_move(car: Node, direction: int) -> void:
 	var delta := Vector2i(direction, 0) if car.orientation == "h" else Vector2i(0, direction)
 	if not _can_move(car, delta):
+		message.text = "%s is blocked" % car.car_id
 		return
 	car.set_grid_position(car.grid_position + delta)
 	moves += 1
+	message.text = "Moved %s" % car.car_id
 	_update_hud()
 	_check_win(car)
 
@@ -123,13 +121,36 @@ func _spawn_cars() -> void:
 		car.drag_requested.connect(try_move)
 		cars.append(car)
 
+func _select_target_car() -> void:
+	for car in cars:
+		if car.target:
+			_select_car(car)
+			return
+	if not cars.is_empty():
+		_select_car(cars[0])
+
 func _select_car(car: Node) -> void:
 	selected_car = car
 	for item in cars:
-		item.modulate = Color(1, 1, 1, 1)
-	car.modulate = Color(1.15, 1.15, 1.15, 1)
+		item.scale = Vector2.ONE
+		item.modulate = Color(0.88, 0.88, 0.88, 1)
+	car.scale = Vector2(1.06, 1.06)
+	car.modulate = Color(1, 1, 1, 1)
 	message.text = "Selected %s" % car.car_id
 
 func _update_hud() -> void:
 	title.text = "Parking Jam"
 	hud.text = "Level %d/%d   Moves %d   R restart" % [level_index, max_levels, moves]
+
+func _direction_from_key(keycode: Key) -> int:
+	if selected_car.orientation == "h":
+		if keycode == KEY_LEFT:
+			return -1
+		if keycode == KEY_RIGHT:
+			return 1
+	elif selected_car.orientation == "v":
+		if keycode == KEY_UP:
+			return -1
+		if keycode == KEY_DOWN:
+			return 1
+	return 0
