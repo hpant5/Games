@@ -3,7 +3,7 @@ extends Node2D
 const CarPieceScene = preload("res://scenes/car_piece.tscn")
 
 var level_index := 1
-var max_levels := 3
+var max_levels := 1
 var level_data: Dictionary = {}
 var cars: Array[Node] = []
 var selected_car: Node
@@ -22,6 +22,7 @@ var turn_speed := 2.8
 @onready var message := $CanvasLayer/Message
 
 func _ready() -> void:
+	max_levels = _count_levels()
 	load_level(level_index)
 
 func _process(delta: float) -> void:
@@ -211,6 +212,16 @@ func _number_key_index(keycode: Key) -> int:
 
 func _is_drive_key(keycode: Key) -> bool:
 	return keycode in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_W, KEY_A, KEY_S, KEY_D]
+
+func _count_levels() -> int:
+	var dir := DirAccess.open("res://levels")
+	if dir == null:
+		return 1
+	var count := 0
+	for file_name in dir.get_files():
+		if file_name.begins_with("level_") and file_name.ends_with(".json"):
+			count += 1
+	return max(count, 1)
 
 func _car_is_blocked(car: Node) -> bool:
 	if not _car_stays_in_lot(car):

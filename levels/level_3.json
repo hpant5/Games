@@ -1,15 +1,14 @@
 {
-  "name": "Tight Lot",
-  "width": 6,
-  "height": 6,
-  "exit": { "side": "right", "row": 2 },
+  "name": "Crowded Corners",
+  "width": 7,
+  "height": 7,
+  "exit": { "side": "right", "row": 4 },
   "cars": [
-    { "id": "A", "x": 0, "y": 2, "length": 2, "orientation": "h", "target": true },
-    { "id": "B", "x": 2, "y": 0, "length": 2, "orientation": "v" },
-    { "id": "C", "x": 3, "y": 1, "length": 3, "orientation": "v" },
-    { "id": "D", "x": 4, "y": 2, "length": 2, "orientation": "v" },
-    { "id": "E", "x": 1, "y": 4, "length": 3, "orientation": "h" },
-    { "id": "F", "x": 5, "y": 0, "length": 2, "orientation": "v" },
-    { "id": "G", "x": 0, "y": 5, "length": 2, "orientation": "h" }
+    { "id": "A", "x": 1, "y": 4, "length": 2, "orientation": "h", "target": true },
+    { "id": "B", "x": 0, "y": 0, "length": 2, "orientation": "v" },
+    { "id": "C", "x": 2, "y": 1, "length": 2, "orientation": "h" },
+    { "id": "D", "x": 5, "y": 0, "length": 2, "orientation": "v" },
+    { "id": "E", "x": 0, "y": 6, "length": 2, "orientation": "h" },
+    { "id": "F", "x": 4, "y": 5, "length": 2, "orientation": "h" }
   ]
 }

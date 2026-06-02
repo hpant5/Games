@@ -1,0 +1,14 @@
+{
+  "name": "Clean Escape",
+  "width": 7,
+  "height": 7,
+  "exit": { "side": "right", "row": 2 },
+  "cars": [
+    { "id": "A", "x": 1, "y": 2, "length": 2, "orientation": "h", "target": true },
+    { "id": "B", "x": 0, "y": 0, "length": 2, "orientation": "v" },
+    { "id": "C", "x": 2, "y": 5, "length": 2, "orientation": "h" },
+    { "id": "D", "x": 4, "y": 0, "length": 2, "orientation": "h" },
+    { "id": "E", "x": 5, "y": 4, "length": 2, "orientation": "v" },
+    { "id": "F", "x": 0, "y": 6, "length": 2, "orientation": "h" }
+  ]
+}

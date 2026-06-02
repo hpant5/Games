@@ -1,0 +1,14 @@
+{
+  "name": "Middle Row",
+  "width": 7,
+  "height": 7,
+  "exit": { "side": "right", "row": 3 },
+  "cars": [
+    { "id": "A", "x": 0, "y": 3, "length": 2, "orientation": "h", "target": true },
+    { "id": "B", "x": 1, "y": 0, "length": 2, "orientation": "h" },
+    { "id": "C", "x": 3, "y": 1, "length": 2, "orientation": "v" },
+    { "id": "D", "x": 5, "y": 0, "length": 2, "orientation": "v" },
+    { "id": "E", "x": 0, "y": 5, "length": 2, "orientation": "v" },
+    { "id": "F", "x": 3, "y": 6, "length": 3, "orientation": "h" }
+  ]
+}

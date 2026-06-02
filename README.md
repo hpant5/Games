@@ -20,7 +20,15 @@ Open this folder in Godot and run `scenes/main.tscn`.
 ## Prototype Scope
 
 - 6x6 board
-- 3 starter levels
+- 8 starter levels
 - Car blocking rules
 - Move counter
 - Level progression
+
+## Level Checks
+
+Run:
+
+```powershell
+python tools/validate_levels.py
+```

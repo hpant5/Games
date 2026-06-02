@@ -1,0 +1,14 @@
+{
+  "name": "Late Brake",
+  "width": 7,
+  "height": 7,
+  "exit": { "side": "right", "row": 4 },
+  "cars": [
+    { "id": "A", "x": 0, "y": 4, "length": 2, "orientation": "h", "target": true },
+    { "id": "B", "x": 2, "y": 0, "length": 2, "orientation": "h" },
+    { "id": "C", "x": 5, "y": 0, "length": 2, "orientation": "v" },
+    { "id": "D", "x": 0, "y": 1, "length": 2, "orientation": "v" },
+    { "id": "E", "x": 3, "y": 5, "length": 2, "orientation": "h" },
+    { "id": "F", "x": 6, "y": 5, "length": 2, "orientation": "v" }
+  ]
+}
