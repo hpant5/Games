@@ -40,3 +40,12 @@ offset_bottom = 1010.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
+
+[node name="GoalHint" type="Label" parent="CanvasLayer"]
+offset_left = 520.0
+offset_top = 470.0
+offset_right = 700.0
+offset_bottom = 520.0
+theme_override_colors/font_color = Color(0.76, 1, 0.68, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1

@@ -20,6 +20,7 @@ var turn_speed := 2.8
 @onready var hud := $CanvasLayer/HUD
 @onready var title := $CanvasLayer/Title
 @onready var message := $CanvasLayer/Message
+@onready var goal_hint := $CanvasLayer/GoalHint
 
 func _ready() -> void:
 	max_levels = _count_levels()
@@ -71,7 +72,7 @@ func load_level(index: int) -> void:
 	_spawn_cars()
 	_select_target_car()
 	_update_hud()
-	message.text = "Click car. Arrows/WASD drive."
+	message.text = "Drive red car to EXIT"
 
 func _drive_selected_car(delta: float) -> void:
 	var throttle := 0.0
@@ -140,20 +141,78 @@ func _check_win(car: Node) -> void:
 func _build_board() -> void:
 	var width := int(level_data["width"])
 	var height := int(level_data["height"])
+	var lot_size := Vector2(width, height) * cell_size
+	var exit_row := int(level_data["exit"]["row"])
+	var exit_center := board_origin + Vector2(width * cell_size, (float(exit_row) + 0.5) * cell_size)
+
+	_add_rect(board_origin - Vector2(20.0, 20.0), lot_size + Vector2(40.0, 40.0), Color(0.06, 0.065, 0.075))
+	_add_rect(board_origin, lot_size, Color(0.13, 0.145, 0.16))
+
 	for y in range(height):
 		for x in range(width):
 			var tile := ColorRect.new()
-			tile.color = Color(0.18, 0.2, 0.23) if (x + y) % 2 == 0 else Color(0.15, 0.17, 0.2)
-			tile.size = Vector2(cell_size - 2.0, cell_size - 2.0)
+			tile.color = Color(0.155, 0.17, 0.19) if (x + y) % 2 == 0 else Color(0.14, 0.155, 0.175)
+			tile.size = Vector2(cell_size - 4.0, cell_size - 4.0)
 			tile.position = board_origin + Vector2(x * cell_size, y * cell_size)
 			board.add_child(tile)
 
-	var exit_row := int(level_data["exit"]["row"])
-	var exit_marker := ColorRect.new()
-	exit_marker.color = Color(0.16, 0.78, 0.35)
-	exit_marker.size = Vector2(42.0, cell_size - 10.0)
-	exit_marker.position = board_origin + Vector2(width * cell_size + 8.0, exit_row * cell_size + 5.0)
-	board.add_child(exit_marker)
+	_add_parking_lines(width, height)
+	_add_lot_border(width, height, exit_row)
+	_add_exit_lane(exit_center)
+	goal_hint.text = "EXIT ->"
+	goal_hint.position = exit_center + Vector2(-44.0, -95.0)
+
+func _add_rect(position: Vector2, size: Vector2, color: Color) -> ColorRect:
+	var rect := ColorRect.new()
+	rect.position = position
+	rect.size = size
+	rect.color = color
+	board.add_child(rect)
+	return rect
+
+func _add_parking_lines(width: int, height: int) -> void:
+	var line_color := Color(0.92, 0.86, 0.52, 0.58)
+	for x in range(width + 1):
+		_add_rect(board_origin + Vector2(float(x) * cell_size - 1.5, 0.0), Vector2(3.0, float(height) * cell_size), line_color)
+	for y in range(height + 1):
+		_add_rect(board_origin + Vector2(0.0, float(y) * cell_size - 1.5), Vector2(float(width) * cell_size, 3.0), Color(0.7, 0.72, 0.76, 0.22))
+
+func _add_lot_border(width: int, height: int, exit_row: int) -> void:
+	var curb := Color(0.84, 0.86, 0.78)
+	var lot_width := float(width) * cell_size
+	var lot_height := float(height) * cell_size
+	_add_rect(board_origin - Vector2(14.0, 14.0), Vector2(lot_width + 28.0, 14.0), curb)
+	_add_rect(board_origin + Vector2(-14.0, lot_height), Vector2(lot_width + 28.0, 14.0), curb)
+	_add_rect(board_origin - Vector2(14.0, 0.0), Vector2(14.0, lot_height), curb)
+
+	var top_height := float(exit_row) * cell_size
+	var bottom_y := float(exit_row + 1) * cell_size
+	_add_rect(board_origin + Vector2(lot_width, 0.0), Vector2(14.0, top_height), curb)
+	_add_rect(board_origin + Vector2(lot_width, bottom_y), Vector2(14.0, lot_height - bottom_y), curb)
+
+func _add_exit_lane(exit_center: Vector2) -> void:
+	var lane := Polygon2D.new()
+	lane.color = Color(0.08, 0.55, 0.24)
+	lane.polygon = PackedVector2Array([
+		exit_center + Vector2(-cell_size * 0.5, -cell_size * 0.5),
+		exit_center + Vector2(cell_size * 1.65, -cell_size * 0.5),
+		exit_center + Vector2(cell_size * 1.95, 0.0),
+		exit_center + Vector2(cell_size * 1.65, cell_size * 0.5),
+		exit_center + Vector2(-cell_size * 0.5, cell_size * 0.5)
+	])
+	board.add_child(lane)
+
+	for i in range(3):
+		var arrow := Polygon2D.new()
+		arrow.color = Color(1.0, 1.0, 1.0, 0.82)
+		var center := exit_center + Vector2(float(i) * 42.0 + 12.0, 0.0)
+		arrow.polygon = PackedVector2Array([
+			center + Vector2(-14.0, -18.0),
+			center + Vector2(16.0, 0.0),
+			center + Vector2(-14.0, 18.0),
+			center + Vector2(-5.0, 0.0)
+		])
+		board.add_child(arrow)
 
 func _spawn_cars() -> void:
 	for car_data in level_data["cars"]:
